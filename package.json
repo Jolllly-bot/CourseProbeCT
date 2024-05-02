@@ -14,6 +14,7 @@
     "test-class-codes": "NODE_ENV=test jasmine --reporter=jasmine-console-reporter --random=false tests/class-codes.test.mjs"
   },
   "dependencies": {
+    "firebase": "^10.11.1",
     "next": "^12.3.4",
     "next-auth": "^4.24.6",
     "react": "^17.0.2",

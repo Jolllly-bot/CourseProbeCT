@@ -3,6 +3,10 @@ import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import Head from "next/head";
 import { SessionProvider } from "next-auth/react";
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/firestore";
+// Add other Firebase modules you need
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   return (
