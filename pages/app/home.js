@@ -1,11 +1,24 @@
 import Link from "next/link";
-import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { auth } from "../../firebase"; 
 
 export default function InstructorHomePage() {
-  const { data: session, status } = useSession();
   const [classCodes, setClassCodes] = useState([]);
+  const [user, setUser] = useState(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    auth.onAuthStateChanged(currentUser => {
+      if (currentUser) {
+        setUser(currentUser);
+        getClassCodes(); // Fetch class codes only if user is logged in
+      } else {
+        // User not logged in, redirect them to login page
+        router.push('/'); // Modify as per your login route
+      }
+    });
+  }, [router]);
 
   const createClassCode = async (event) => {
     event.preventDefault();
@@ -53,22 +66,12 @@ export default function InstructorHomePage() {
     getClassCodes();
   }, []);
 
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      signIn();
-    }
-  }, [status]);
-
-  if (!session) {
-    return <div>Not signed in</div>;
-  }
-
 //   console.log(classCodes);
 
   return (
     <>
       {/* <div className="title">Instructor Home</div> */}
-      <div className="title ">Welcome back, {session.user.name}</div>
+      <div className="title ">Welcome back, {user? user.displayName: ''}</div>
 
       <section className="section">
         <div className="title-is-5">Create Class Code</div>
@@ -100,7 +103,7 @@ export default function InstructorHomePage() {
                 </tr>
             </thead>
             <tbody>
-                {classCodes.map((classCode, index) => {
+                {/* {classCodes.map((classCode, index) => {
                 return <tr key={index}>
                     <td>
                         <Link href={`/app/${classCode.id}`}>
@@ -118,7 +121,7 @@ export default function InstructorHomePage() {
                         </button>
                     </td>
                 </tr>
-                })}
+                })} */}
             </tbody>
         </table>
 
