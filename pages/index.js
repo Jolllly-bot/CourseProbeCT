@@ -1,6 +1,43 @@
 import ClassLink from "../components/ClassLink";
+import { getCourses, addCourse } from '../services/firestore/courses';
+import { useState, useEffect } from "react";
 
 export default function Home() {
+  const [courses, setCourses] = useState([]);
+
+  useEffect(() => {
+      const fetchCourses = async () => {
+          try {
+              const coursesData = await getCourses();
+              setCourses(coursesData);
+          } catch (error) {
+              console.error("Failed to fetch courses:", error);
+          }
+      };
+
+      fetchCourses();}, []);
+  
+      const [courseName, setCourseName] = useState('');
+      const [courseCode, setCourseCode] = useState('');
+  
+      const handleSubmit = async (event) => {
+        console.log("submit");
+          event.preventDefault();
+          try {
+              const courseData = {
+                  name: courseName,
+                  code: courseCode,
+              };
+              await addCourse(courseData);
+              alert('Course added successfully!');
+              setCourseName('');
+              setCourseCode('');
+          } catch (error) {
+              console.error('Error adding course:', error);
+              alert('Failed to add course.');
+          }
+      };
+
   return (
     <div>
       <main>
@@ -21,7 +58,33 @@ export default function Home() {
             </div>
           </div>
         </section>
-
+        <h1>All Courses</h1>
+            <ul>
+                {courses.map(course => (
+                    <li key={course.id}>
+                        {course.name} - {course.code}
+                    </li>
+                ))}
+            </ul>
+        <form onSubmit={handleSubmit}>
+            <div>
+                <label>Course Code:</label>
+                <input
+                    type="text"
+                    value={courseCode}
+                    onChange={e => setCourseCode(e.target.value)}
+                />
+            </div>
+            <div>
+                <label>Course Name:</label>
+                <input
+                    type="text"
+                    value={courseName}
+                    onChange={e => setCourseName(e.target.value)}
+                />
+            </div>
+            <button type="submit">Add Course</button>
+        </form>
         <section class="hero is-medium">
           <div class="hero-body columns is-vcentered">
             <div className="column">
