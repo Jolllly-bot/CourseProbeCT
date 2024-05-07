@@ -49,7 +49,7 @@ const NavBar = () => {
     >
       <div className="navbar-brand">
         <Link href="/">
-          <a className="navbar-item">QUESTIONIFY</a>
+          <a className="navbar-item"><strong>CourseProbe</strong></a>
         </Link>
       </div>
       <div className="navbar-menu">

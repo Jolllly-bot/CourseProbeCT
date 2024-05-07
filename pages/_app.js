@@ -13,8 +13,8 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
     <div>
       <SessionProvider session={session}>
         <Head>
-          <title>Questionify Home</title>
-          <meta name="description" content="Questionify homepage" />
+          <title>CourseProbe Home</title>
+          <meta name="description" content="CourseProbe homepage" />
           <link
             rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"

@@ -89,21 +89,11 @@ export default function Home() {
               <p className="subtitle" style={{ fontSize: '1.5em' }}>
                 Discover what students say about their courses at Cornell Tech
               </p>
-              <a href="https://classes.cornell.edu/browse/roster/SP24" className="button is-success" style={{ height: '2.5em' }}>View Courses at Cornell</a>
+              <a href="https://classes.cornell.edu/browse/roster/SP24" className="button is-success" style={{ height: '2.5em' }}>View all courses at Cornell</a>
             </div>
           </div>
         </section>
-        <div className="columns is-centered" style={{ marginTop: '20px' }}>
-          <div className="column is-3">
-            <input type="text" className="input" style={{ height: '2.5em' }} value={courseCode} onChange={handleCourseCodeChange} placeholder="Course Code" />
-          </div>
-          <div className="column is-3">
-            <input type="text" className="input" style={{ height: '2.5em' }} value={courseName} onChange={e => setCourseName(e.target.value)} placeholder="Course Name" />
-          </div>
-          <div className="column is-2">
-            <button className="button is-success" style={{ height: '2.5em' }} onClick={handleSubmit}>Add Course</button>
-          </div>
-        </div>
+        <section className="section">
         <div className="buttons has-addons is-centered" style={{ marginBottom: '20px' }}>
           {['CS', 'ECE', 'INFO', 'LAW', 'NBAY', 'ORIE', 'TECH'].map(dept => (
             <button key={dept} onClick={() => handleFilterToggle(dept)} className={`button ${filter.has(dept) ? 'is-success' : ''}`} style={{ fontSize: '1.1rem', fontWeight: 'bold', margin: '5px' }}>
@@ -114,6 +104,7 @@ export default function Home() {
         <div style={{ textAlign: 'center', marginTop: '10px' }}>
           <input type="text" className="input" value={searchText} onChange={(e) => setSearchText(e.target.value)} placeholder="Search Course Name" style={{ height: '2.5em', width: '500px' }} />
         </div>
+        </section>
           <section className="section custom-scrollbar" style={{ overflowY: 'auto', height: '600px' }}>
           <ul>
             {filteredCourses.map(course => (
@@ -125,13 +116,27 @@ export default function Home() {
                 display: 'flex',  
                 alignItems: 'center'  
               }}>
-                <a href={`/app/${course.id}`} style={{ textDecoration: 'none', color: 'inherit', flex: '1 0 20%' }}>
+                <a href={`/app/${course.id}`} style={{ textDecoration: 'none', color: 'inherit', flex: '1 0 20%' }} class="has-text-primary">
                   <strong style={{ fontSize: '1.8em' }}>{course.code}</strong>
                 </a>
                 <span style={{ fontSize: '1.8em', flex: '1 0 60%' }}>{course.name}</span>
               </li>
             ))}
           </ul>
+          </section>
+        <section className="section">
+        <p><strong>Not finding the course? Add here:</strong></p>
+        <div className="columns is-centered" style={{ marginTop: '20px' }}>
+          <div className="column is-3">
+            <input type="text" className="input" style={{ height: '2.5em' }} value={courseCode} onChange={handleCourseCodeChange} placeholder="Course Code" />
+          </div>
+          <div className="column is-3">
+            <input type="text" className="input" style={{ height: '2.5em' }} value={courseName} onChange={e => setCourseName(e.target.value)} placeholder="Course Name" />
+          </div>
+          <div className="column is-2">
+            <button className="button is-success" style={{ height: '2.5em' }} onClick={handleSubmit}>Add Course</button>
+          </div>
+        </div>
         </section>
       </main>
     </div>

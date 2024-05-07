@@ -5,8 +5,8 @@ const Footer = () => {
     <footer class="footer">
       <div class="content has-text-centered">
         <p>
-          <strong>Questionify</strong> for{" "}
-          <a href="https://jgthms.com">CS 5356</a>.
+          <strong>CourseProbe</strong> for{" "}
+          <a href="https://tech.cornell.edu">Cornell Tech</a>.
         </p>
       </div>
     </footer>
