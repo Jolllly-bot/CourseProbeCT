@@ -177,8 +177,8 @@ export default function Home() {
               }}>
                 {editingId === course.id ? (
                   <>
-                    <input value={editCode} onChange={(e) => handleCourseCodeChange(e)} style={{ marginRight: '10px', flex: '1 0 20%' }} />
-                    <input value={editName} onChange={(e) => handleCourseNameChange(e)} style={{ marginRight: '10px', flex: '1 0 60%' }} />
+                    <input className="input" value={editCode} onChange={(e) => handleCourseCodeChange(e)} style={{ marginRight: '10px', flex: '1 0 20%' }} />
+                    <input className="input" value={editName} onChange={(e) => handleCourseNameChange(e)} style={{ marginRight: '10px', flex: '1 0 60%' }} />
                     <button className="button is-success" onClick={handleSave}>Save</button>
                   </>
                 ) : (
@@ -189,8 +189,8 @@ export default function Home() {
                       </a>
                       <span style={{ fontSize: '1.8em', paddingLeft: '1.2em', flex: '1 0 80%' }}>{course.name}</span>
                     </div>
-                    <div className="buttons-container">
-                        <button className="button is-primary" onClick={() => handleEdit(course)}>Edit</button>
+                    <div className="level-is-right">
+                        <button className="button is-info" onClick={() => handleEdit(course)}>Edit</button>
                         <button className="button is-danger" onClick={() => handleDelete(course.id)}>Delete</button>
                     </div>
 

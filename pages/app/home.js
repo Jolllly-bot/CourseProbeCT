@@ -72,7 +72,7 @@ export default function InstructorHomePage() {
                                       </td>
                                     <td>{comment.rating}</td>
                                     <td>{comment.year}</td>
-                                    <td>{new Date(comment.createdAt).toLocaleDateString()}</td>
+                                    <td>{comment.createdAt.toDate().toDateString()}</td>
                                     <td>
                                         {user && comment.userId === user.uid && (
                                             <button className="button is-danger is-small"
