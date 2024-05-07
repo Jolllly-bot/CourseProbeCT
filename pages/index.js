@@ -4,6 +4,11 @@ import { useState, useEffect } from "react";
 
 export default function Home() {
   const [courses, setCourses] = useState([]);
+  const [filter, setFilter] = useState(new Set());
+  const [courseName, setCourseName] = useState('');
+  const [courseCode, setCourseCode] = useState('');
+  const [searchText, setSearchText] = useState('');  // State to hold the search text
+
 
   useEffect(() => {
       const fetchCourses = async () => {
@@ -15,37 +20,50 @@ export default function Home() {
           }
       };
 
-      fetchCourses();}, []);
-  
-      const [courseName, setCourseName] = useState('');
-      const [courseCode, setCourseCode] = useState('');
-  
-      const handleSubmit = async (event) => {
-        console.log("submit");
-          event.preventDefault();
-          try {
-              const courseData = {
-                  name: courseName,
-                  code: courseCode,
-              };
-              await addCourse(courseData);
-              alert('Course added successfully!');
-              setCourseName('');
-              setCourseCode('');
-          } catch (error) {
-              console.error('Error adding course:', error);
-              alert('Failed to add course.');
-          }
-      };
+      fetchCourses();
+  }, []);
+
+  const handleFilterToggle = (dept) => {
+      const newFilter = new Set(filter);
+      if (newFilter.has(dept)) {
+          newFilter.delete(dept);
+      } else {
+          newFilter.add(dept);
+      }
+      setFilter(newFilter);
+  };
+
+  const handleSubmit = async (event) => {
+      console.log("submit");
+      event.preventDefault();
+      try {
+          const courseData = {
+              name: courseName,
+              code: courseCode,
+          };
+          await addCourse(courseData);
+          alert('Course added successfully!');
+          setCourseName('');
+          setCourseCode('');
+      } catch (error) {
+          console.error('Error adding course:', error);
+          alert('Failed to add course.');
+      }
+  };
+
+  const filteredCourses = courses.filter(course => 
+    (filter.size === 0 || Array.from(filter).some(dept => course.code.startsWith(dept))) &&
+    course.name.toLowerCase().includes(searchText.toLowerCase())  // Filter by search text
+  );
 
   return (
     <div>
       <main>
-        <section class="hero is-medium is-link">
-          <div class="hero-body columns is-vcentered">
+        <section className="hero is-medium is-link">
+          <div className="hero-body columns is-vcentered">
             <div className="column">
-              <p class="title">Ask and share questions during class</p>
-              <p class="subtitle">
+              <p className="title">Ask and share questions during class</p>
+              <p className="subtitle">
                 Quickly  a URL where you can post questions during class
                 and see what other users are saying
               </p>
@@ -58,65 +76,77 @@ export default function Home() {
             </div>
           </div>
         </section>
-        <h1>All Courses</h1>
-            <ul>
-                {courses.map(course => (
-                    <li key={course.id}>
-                        {course.name} - {course.code}
-                    </li>
-                ))}
-            </ul>
-        <form onSubmit={handleSubmit}>
-            <div>
-                <label>Course Code:</label>
-                <input
-                    type="text"
-                    value={courseCode}
-                    onChange={e => setCourseCode(e.target.value)}
-                />
-            </div>
-            <div>
-                <label>Course Name:</label>
-                <input
-                    type="text"
-                    value={courseName}
-                    onChange={e => setCourseName(e.target.value)}
-                />
-            </div>
-            <button type="submit">Add Course</button>
-        </form>
-        <section class="hero is-medium">
-          <div class="hero-body columns is-vcentered">
+        <div className="columns is-centered"style={{ marginTop: '20px' }}>
+          <div className="column is-3">
+            <input type="text" className="input" style={{ height: '2.5em' }} value={courseCode} onChange={e => setCourseCode(e.target.value)} placeholder="Course Code" />
+          </div>
+          <div className="column is-3">
+            <input type="text" className="input" style={{ height: '2.5em' }} value={courseName} onChange={e => setCourseName(e.target.value)} placeholder="Course Name" />
+          </div>
+          <div className="column is-2">
+            <button className="button is-success" style={{ height: '2.5em' }} onClick={handleSubmit}>Add Course</button>
+          </div>
+        </div>
+        <div className="buttons has-addons is-centered" style={{ marginBottom: '20px' }}>
+          {['CS', 'ECE', 'INFO', 'LAW', 'NBAY', 'ORIE', 'TECH'].map(dept => (
+              <button
+                key={dept}
+                onClick={() => handleFilterToggle(dept)}
+                className={`button ${filter.has(dept) ? 'is-success' : ''}`}
+                style={{ fontSize: '1.1rem', fontWeight: 'bold', margin: '5px' }}
+              >
+                {dept}
+              </button>
+          ))}
+        </div>
+        <div style={{ textAlign: 'center', marginTop: '10px' }}> {/* Add a search input */}
+          <input
+            type="text"
+            className="input"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            placeholder="Search Course Name"
+            style={{ height: '2.5em', width: '500px' }} 
+          />
+        </div>
+        <section className="section" style={{ overflowY: 'auto', height: '600px' }}>
+  <ul>
+    {filteredCourses.map(course => (
+      <li key={course.id} style={{ 
+        padding: '10px', 
+        backgroundColor: '#f0f0f0', 
+        margin: '10px', 
+        borderRadius: '10px',
+        display: 'flex',  
+        alignItems: 'center'  
+      }}>
+        <strong style={{ 
+          fontSize: '1.8em', 
+          flex: '1 0 20%'  
+        }}>{course.code}</strong>
+        <span style={{
+          fontSize: '1.8em', 
+          flex: '1 0 60%'  
+        }}>{course.name}</span>
+      </li>
+    ))}
+  </ul>
+</section>
+        <section className="hero is-medium">
+          <div className="hero-body columns is-vcentered">
             <div className="column">
               <figure>
                 <img src="https://dummyimage.com/640x360/fff/aaa" />
               </figure>
             </div>
             <div className="column">
-              <p class="title">
+              <p className="title">
                 Share questions with the class using a custom URL
               </p>
-              <p class="subtitle">
+              <p className="subtitle">
                 Create your own temporary URL where you can save questions and
                 view them in real time.
               </p>
-            </div>
-          </div>
-        </section>
-
-        <section class="hero is-medium has-background-white-ter	">
-          <div class="hero-body columns is-vcentered">
-            <div className="column">
-              <p class="title">Ask a question</p>
-              <p class="subtitle">
-                Write a new questions to share with the class. Delete it if you
-                made a mistake.
-              </p>
-            </div>
-            <div className="column">
-              <figure>
-                <img src="https://dummyimage.com/640x360/fff/aaa" />
-              </figure>
             </div>
           </div>
         </section>
