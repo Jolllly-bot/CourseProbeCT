@@ -1,1 +1,20 @@
 /* any custom CSS you want to include */
+/* 在你的全局样式表或组件的样式中添加 */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 10px;  /* 滑动条宽度 */
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;  /* 滑动条背景 */
+    border-radius: 10px;  /* 圆角 */
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #888;  /* 滑块颜色 */
+    border-radius: 10px;  /* 圆角 */
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #555;  /* 滑块悬停颜色 */
+  }
+  
