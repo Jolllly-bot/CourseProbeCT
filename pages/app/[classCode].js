@@ -15,12 +15,9 @@ export default function ClassCommentsPage() {
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
             setCurrentUser(user);
-            if (user && classId) {
-                fetchComments(classId);
-                fetchCourseDetails(classId);
-            } else {
-                fetchCourseDetails(classId);
-            }
+            fetchComments(classId);
+            fetchCourseDetails(classId);
+                
         });
 
         return () => unsubscribe(); // Cleanup subscription on unmount
@@ -89,9 +86,10 @@ export default function ClassCommentsPage() {
 
     return (
         <div>
-            <div className="title">{courseDetails.code} {courseDetails.name} Comments</div>
+            <div className="title">{courseDetails.code} {courseDetails.name}</div>
 
             <section className="section">
+                <div className="title is-5">Comments</div>
                 <div className="container">
                 {comments.map(comment => (
                     <div key={comment.id} className="box">
@@ -163,6 +161,7 @@ export default function ClassCommentsPage() {
             </section>
 
             <section className="section">
+                <div className="title is-5">Add a Comment</div>
                 {currentUser ? (
                     <form onSubmit={createComment}>
                         <div>
@@ -216,7 +215,7 @@ export default function ClassCommentsPage() {
                         </div>
                     </form>
                 ) : (
-                    <p>Please sign in to submit a comment.</p>
+                    <p>Please sign in to add a new comment.</p>
                 )}
             </section>
         </div>
