@@ -2,17 +2,19 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { auth } from "../../firebase"; 
+import { deleteComment, getCommentsByUser } from "../../services/firestore/comments";
 
 export default function InstructorHomePage() {
-  const [classCodes, setClassCodes] = useState([]);
+  const [comments, setComments] = useState([]);
   const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     auth.onAuthStateChanged(currentUser => {
       if (currentUser) {
         setUser(currentUser);
-        getClassCodes(); // Fetch class codes only if user is logged in
+        fetchUserComments(auth.currentUser.uid);
       } else {
         // User not logged in, redirect them to login page
         router.push('/'); // Modify as per your login route
@@ -20,114 +22,72 @@ export default function InstructorHomePage() {
     });
   }, [router]);
 
-  const createClassCode = async (event) => {
-    event.preventDefault();
+    const fetchUserComments = async (userId) => {
+      setIsLoading(true); 
+      try {
+        const userComments = await getCommentsByUser(userId);
+        setComments(userComments);
+        console.log(userComments)
+          setIsLoading(false);
+      } catch (error) {
+          console.error('Failed to fetch comments:', error);
+          setIsLoading(false);  
+      }
+    };
 
-    const classCode = event.target.classCodeInput.value;
-    const response = await fetch("/api/class-codes", {
-      method: "POST",
-      headers: {
-        'Content-Type' : "application/json",
-      },
-      body: JSON.stringify({
-        id: classCode
-      }),
-    });
-    
-    if (response.ok) {
-        await getClassCodes()
-    }
-    // router.reload();
-  }
-
-  async function getClassCodes() {
-    const response = await fetch("/api/class-codes");
-    const data = await response.json();
-    setClassCodes(data);
-  }
-
-  const onClassDelete = async (classCode) => {
-    const response = await fetch("/api/class-codes", {
-      method: "DELETE",
-      headers: {
-        'Content-Type' : "application/json",
-      },
-      body: JSON.stringify({
-        id: classCode
-      }),
-    });
-
-    if (response.ok) {
-        await getClassCodes()
-    }
-  }
-
-  useEffect(() => {
-    getClassCodes();
-  }, []);
+    const handleDeleteComment = async (courseId, commentId) => {
+      await deleteComment(courseId, commentId);
+      fetchUserComments(auth.currentUser.uid); // Refresh comments after deletion
+    };
 
 //   console.log(classCodes);
 
   return (
     <>
-      {/* <div className="title">Instructor Home</div> */}
       <div className="title ">Welcome back, {user? user.displayName: ''}</div>
 
       <section className="section">
-        <div className="title-is-5">Create Class Code</div>
-
-        <form onSubmit={(event) => createClassCode(event)}>
-            <div className="field has-addons">
-                <p className="control">
-                    <input
-                    className="input"
-                    type="text"
-                    name="classCodeInput"
-                    placeholder="Class code"
-                    ></input>
-                </p>
-                <p className="control">
-                    <button className="button is-primary">Create Class Code</button>
-                </p>
+        <div className="title-is-5">Your Comments</div>
+            <div className="container">
+                {isLoading ? (
+                    <p>Loading comments...</p>
+                ) : (
+                    <table className="table is-fullwidth is-striped">
+                        <thead>
+                            <tr>
+                                <th>Comment</th>
+                                <th>Rating</th>
+                                <th>Year</th>
+                                <th>Date Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {comments.map(comment => (
+                                <tr key={comment.id}>
+                                    
+                                    <td><Link href={`/app/${comment.courseId}`}>
+                                      <a>{comment.question}</a>
+                                      </Link>
+                                      </td>
+                                    <td>{comment.rating}</td>
+                                    <td>{comment.year}</td>
+                                    <td>{new Date(comment.createdAt).toLocaleDateString()}</td>
+                                    <td>
+                                        {user && comment.userId === user.uid && (
+                                            <button className="button is-danger is-small"
+                                                onClick={() => onQuestionDelete(comment.id)}>
+                                                Delete
+                                            </button>
+                                        )}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                )}
             </div>
-        </form>
-      </section>
-
-      <section className="section">
-        <div className="title-is-5">Your Class Codes</div>
-        <table className="table">
-            <thead>
-                <tr>
-                <th>Class Code</th>
-                <th>Date created</th>
-                </tr>
-            </thead>
-            <tbody>
-                {/* {classCodes.map((classCode, index) => {
-                return <tr key={index}>
-                    <td>
-                        <Link href={`/app/${classCode.id}`}>
-                        {classCode.id}
-                        </Link>
-                    </td>
-                    <td>
-                        {classCode.createdAt ? 
-                        new Date(classCode.createdAt).toString() : 'No date'}
-                    </td>
-                    <td>
-                        <button className="button is-danger"
-                        onClick={() => onClassDelete(classCode.id)}>
-                            Delete
-                        </button>
-                    </td>
-                </tr>
-                })} */}
-            </tbody>
-        </table>
-
-        {/* <div>
-            {JSON.stringify(classCodes)}</div> */}
-      </section>
+        </section>
     </>
   );
 }

@@ -31,3 +31,21 @@ export const deleteComment = async (courseId, commentId) => {
   const commentRef = doc(db, 'courses', courseId, 'comments', commentId);
   return deleteDoc(commentRef);
 };
+
+export const getCommentsByUser = async (userId) => {
+  const coursesRef = collection(db, 'courses');
+  const allComments = [];
+
+  const courseDocs = await getDocs(coursesRef);
+  for (const courseDoc of courseDocs.docs) {
+    const commentsRef = collection(courseDoc.ref, 'comments');
+    const querySnapshot = await getDocs(commentsRef);
+    querySnapshot.forEach((doc) => {
+      if (doc.data().userId === userId) {
+        allComments.push({ id: doc.id, courseId: courseDoc.id, ...doc.data() });
+      }
+    });
+  }
+
+  return allComments;
+};
