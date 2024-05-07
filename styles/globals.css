@@ -18,3 +18,15 @@
     background: #555;  /* 滑块悬停颜色 */
   }
   
+
+  .buttons-container {
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    align-items: flex-end; /* Align buttons to the right */
+    min-width: 100px; /* Adjust this as necessary to fit your design */
+}
+
+.button {
+    white-space: nowrap; /* Ensures the button text doesn't wrap */
+    margin-top: 5px; /* Adds a small space between stacked buttons */
+}
