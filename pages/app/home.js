@@ -39,6 +39,7 @@ export default function InstructorHomePage() {
       await deleteComment(courseId, commentId);
       fetchUserComments(auth.currentUser.uid); // Refresh comments after deletion
     };
+    
 
 //   console.log(classCodes);
 
