@@ -77,7 +77,7 @@ export default function Home() {
       setEditingId(null);
       setEditName('');
       setEditCode('');
-      alert('Course updated successfully!');
+      // alert('Course updated successfully!');
     } catch (error) {
       console.error('Error updating course:', error);
       alert('Failed to update course.');
@@ -198,17 +198,17 @@ export default function Home() {
                 ) : (
                   <>
                     <div style={{ display: 'flex', alignItems: 'center', flex: '1' }}>
-                      <a href={`/app/${course.id}`} style={{ /* ... */ }} className="has-text-primary">
-                        <strong style={{ fontSize: '1.8em' }}>{course.code}</strong>
-                      </a>
-                      <span style={{ fontSize: '1.8em', paddingLeft: '1.2em', flex: '1 0 80%' }}>{course.name}</span>
+                        <strong style={{ fontSize: '1.5em' }}>{course.code}</strong>
+                      <span style={{ fontSize: '1.5em', paddingLeft: '1.2em', flex: '1 0 80%' }}>{course.name}</span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <span style={{ marginRight: '10px' }}>{course.commentCount} comments</span>
+                      <a href={`/app/${course.id}`} style={{ /* ... */ }} className="has-text-primary">
+                        <strong style={{ marginRight: '10px' }}>See {course.commentCount} comments</strong>
+                      </a>
                       {isLoggedIn && (
                         <div className="level-is-right">
-                          <button className="button is-info" onClick={() => handleEdit(course)}>Edit</button>
-                          <button className="button is-danger" onClick={() => handleDelete(course.id)}>Delete</button>
+                          <button className="button is-info is-light" onClick={() => handleEdit(course)}>Edit</button>
+                          <button className="button is-danger is-light" onClick={() => handleDelete(course.id)}>Delete</button>
                         </div>
                       )}
                     </div>

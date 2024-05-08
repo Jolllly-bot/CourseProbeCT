@@ -85,10 +85,12 @@ export default function ClassCommentsPage() {
 
     return (
         <div style={{ fontSize: '18px' }}>
-            <div className="title" style={{ textAlign: 'C'}}>{courseDetails.code} {courseDetails.name}</div>
+            <div className="title ml-4 mt-4">
+                {courseDetails.code} {courseDetails.name}
+            </div>
 
             <section className="section">
-                <div className="title is-5">Comments</div>
+                <div className="title is-4 mb-10">Comments</div>
                 <div className="container custom-scrollbar">
                     {comments.map(comment => (
                         <div key={comment.id} className="box">
@@ -96,43 +98,63 @@ export default function ClassCommentsPage() {
                                 <div className="media-content">
                                     <div className="content">
                                         <div>
-                                            <div className="level-left">
-                                                {editingCommentId === comment.id ? (
-                                                    <div>
-                                                        <input className="input" type="text" value={comment.question}
-                                                            onChange={(e) => {
-                                                                const updatedComments = comments.map((c) =>
-                                                                    c.id === comment.id ? { ...c, question: e.target.value } : c
-                                                                );
-                                                                setComments(updatedComments);
-                                                            }}
-                                                        />
-                                                        <button className="button is-primary"
-                                                            onClick={() => {
-                                                                updateComment(classId, comment.id, { question: comment.question });
-                                                                setEditingCommentId(null);
-                                                            }}
-                                                        >
-                                                            Update
-                                                        </button>
-                                                    </div>
-                                                ) : (
-                                                    <p className="comment-text">
-                                                        <strong>Someone from {comment.year}</strong>{" "}
-                                                        <small>{comment.createdAt.toDate().toDateString()}</small>
-                                                        <br />
-                                                        {comment.question}
-                                                        <br />
-                                                        <br />
-                                                        Rating: {comment.rating}, Difficulty: {comment.difficulty}
-                                                    </p>
-                                                )}
+                                            <div>
+                                            {editingCommentId === comment.id ? (
+                                            <div>
+                                                <textarea
+                                                className="textarea"
+                                                rows="4"
+                                                value={comment.question}
+                                                onChange={(e) => {
+                                                    const updatedComments = comments.map((c) =>
+                                                    c.id === comment.id
+                                                        ? { ...c, question: e.target.value }
+                                                        : c
+                                                    );
+                                                    setComments(updatedComments);
+                                                }}
+                                                />
+                                                
+                                            </div>
+                                            ) : (
+                                            <p className="comment-text">
+                                                <strong>Someone from {comment.year}</strong>{" "}
+                                                <small>
+                                                {comment.createdAt.toDate().toDateString()}
+                                                </small>
+                                                <br />
+                                                {comment.question}
+                                                <br />
+                                                <div class="tags are-Medium">
+                                                    <span class="tag is-primary is-light mt-3 mr-4">
+                                                        Rating: {comment.rating}
+                                                    </span>
+                                                    <span class="tag is-warning is-light mt-3">
+                                                        Difficulty: {comment.difficulty}
+                                                    </span>
+                                                </div>                                            
+                                            </p>
+                                            )}
                                             </div>
                                             <div className="level-right">
                                                 {currentUser && comment.userId === currentUser.uid ? (
-                                                    <button className="button is-info" onClick={() => handleEditClick(comment.id)}>
+                                                    <>
+                                                    {editingCommentId === comment.id ? (
+                                                        <button
+                                                        className="button is-primary"
+                                                        onClick={() => {
+                                                            updateComment(classId, comment.id, {
+                                                            question: comment.question,
+                                                            });
+                                                            setEditingCommentId(null);
+                                                        }}
+                                                        >
+                                                        Update
+                                                        </button>) : (null)}
+                                                    <button className="button is-info is-light" onClick={() => handleEditClick(comment.id)}>
                                                         {editingCommentId === comment.id ? "Cancel" : "Edit"}
                                                     </button>
+                                                    </>
                                                 ) : null}
                                             </div>
                                         </div>
@@ -148,61 +170,76 @@ export default function ClassCommentsPage() {
             <hr style={{ marginTop: '20px', height: '10px' }} /> {/* Added horizontal line */}
             
             <section className="section">
-                <div className="title is-5">Add a Comment</div>
+                <div className="title is-4 mb-10">Add a Comment</div>
                 {currentUser ? (
-                    <form onSubmit={createComment}>
-                        <div>
-                            <div>Year taken:</div>
-                            <p className="control">
-                                <input
-                                    className="input"
-                                    type="text"
-                                    name="yearInput"
-                                    placeholder="Spring 2024"
-                                    required
-                                ></input>
-                            </p>
-                            <div>Rate the course (0-10):</div>
-                            <p className="control">
-                                <input
-                                    className="input"
-                                    type="number"
-                                    name="ratingInput"
-                                    placeholder="0(not recommend) - 10(highly recommend)"
-                                    min="0"
-                                    max="10"
-                                    required
-                                ></input>
-                            </p>
-                            <div>Rate the difficulty & workload (0-10):</div>
-                            <p className="control">
-                                <input
-                                    className="input"
-                                    type="number"
-                                    name="difficultyInput"
-                                    placeholder="0(easy peasy) - 10(very challenging)"
-                                    min="0"
-                                    max="10"
-                                    required
-                                ></input>
-                            </p>
-                            <div>Please write your comment</div>
-                            <p className="control">
-                                <input
-                                    className="input"
-                                    type="text"
-                                    name="questionInput"
-                                    placeholder="Prof ...; Assignment..; I spend...; I learned..."
-                                    required
-                                ></input>
-                            </p>
-                            <p className="control">
-                                <button className="button is-primary">Submit</button>
-                            </p>
-                        </div>
-                    </form>
+                <form onSubmit={createComment} className="box">
+                    <div className="field">
+                    <label className="label">Year taken:</label>
+                    <div className="control">
+                        <input
+                        className="input"
+                        type="text"
+                        name="yearInput"
+                        placeholder="Spring 2024"
+                        required
+                        />
+                    </div>
+                    </div>
+
+                    <div className="field">
+                    <label className="label">Rate the course (0-10):</label>
+                    <div className="control">
+                        <input
+                        className="input"
+                        type="number"
+                        name="ratingInput"
+                        placeholder="0(not recommend) - 10(highly recommend)"
+                        min="0"
+                        max="10"
+                        required
+                        />
+                    </div>
+                    </div>
+
+                    <div className="field">
+                    <label className="label">
+                        Rate the difficulty & workload (0-10):
+                    </label>
+                    <div className="control">
+                        <input
+                        className="input"
+                        type="number"
+                        name="difficultyInput"
+                        placeholder="0(easy peasy) - 10(very challenging)"
+                        min="0"
+                        max="10"
+                        required
+                        />
+                    </div>
+                    </div>
+
+                    <div className="field">
+                    <label className="label">Please write your comment</label>
+                    <div className="control">
+                        <textarea
+                        className="textarea"
+                        name="questionInput"
+                        placeholder="Prof ...; Assignment..; I spend...; I learned..."
+                        required
+                        />
+                    </div>
+                    </div>
+
+                    <div className="field">
+                    <div className="control">
+                        <button className="button is-primary">Submit</button>
+                    </div>
+                    </div>
+                </form>
                 ) : (
-                    <p>Please sign in to add a new comment.</p>
+                <p>
+                    Please sign in to add a new comment.
+                </p>
                 )}
             </section>
         </div>
