@@ -51,8 +51,14 @@ export default function InstructorHomePage() {
   };
 
   const handleDeleteComment = async (courseId, commentId) => {
-    await deleteComment(courseId, commentId);
-    fetchUserComments(auth.currentUser.uid); // Refresh comments after deletion
+    if (window.confirm("Are you sure you want to delete this comment?")) {
+      try {
+        await deleteComment(courseId, commentId);
+        fetchUserComments(auth.currentUser.uid); // Refresh comments after deletion
+      } catch (error) {
+        console.error('Failed to delete comment:', error);
+      }
+    }
   };
 
   return (

@@ -85,15 +85,17 @@ export default function Home() {
   };
 
   const handleDelete = async (id) => {
-    try {
-      await deleteCourse(id);
-      setCourses(courses.filter(course => course.id !== id));
-      alert('Course deleted successfully!');
-    } catch (error) {
-      console.error('Error deleting course:', error);
-      alert('Failed to delete course.');
+    if (window.confirm("Are you sure you want to delete this course?")) {
+      try {
+        await deleteCourse(id);
+        setCourses(courses.filter(course => course.id !== id));
+        alert('Course deleted successfully!');
+      } catch (error) {
+        console.error('Error deleting course:', error);
+        alert('Failed to delete course.');
+      }
     }
-  };
+  };  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
