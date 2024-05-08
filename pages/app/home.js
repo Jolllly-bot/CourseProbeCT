@@ -63,10 +63,10 @@ export default function InstructorHomePage() {
 
   return (
     <>
-      <div className="title">Welcome back, {user ? user.displayName : 'Guest'}</div>
+      <div className="title ml-4 mt-4">Welcome back, {user ? user.displayName : 'Guest'}</div>
 
       <section className="section">
-        <div className="title-is-5" style={{ fontSize: '30px' }}>Your Comments</div>
+        <div className="title is-4"> Your Comments</div>
         <div className="container">
           {isLoading ? (
             <p>Loading comments...</p>
@@ -92,7 +92,7 @@ export default function InstructorHomePage() {
                     <td>{comment.createdAt.toDate().toDateString()}</td>
                     <td>
                       {user && comment.userId === user.uid && (
-                        <>
+                        <div>
                           <Link href={`/app/${comment.courseId}`}>
                             <button className="button is-info is-small" style={{ marginLeft: '10px' }}>
                               View
@@ -103,7 +103,7 @@ export default function InstructorHomePage() {
                             onClick={() => handleDeleteComment(comment.courseId, comment.id)}>
                             Delete
                           </button>
-                        </>
+                        </div>
                       )}
                     </td>
                   </tr>
