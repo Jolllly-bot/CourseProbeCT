@@ -109,16 +109,23 @@ export default function Home() {
     }
     try {
       const courseData = { name: courseName, code: courseCode };
-      await addCourse(courseData);
-      alert('Course added successfully!');
-      setCourses(prevCourses => [...prevCourses, {...courseData, id: new Date().getTime()}]);
-      setCourseName('');
-      setCourseCode('');
-    } catch (error) {
-      console.error('Error adding course:', error);
-      alert('Failed to add course.');
+      const docRef = await addCourse(courseData); // This returns a document reference
+      const newCourseId = docRef.id; // Extracting the ID from the document reference
+      const comments = await getComments(newCourseId); // Fetch comments for the new course
+      const newCourse = { ...courseData, id: newCourseId, commentCount: comments.length }; // Include comment count
+    setCourses(prevCourses => [...prevCourses, newCourse]);
+    alert('Course added successfully!');
+    setCourseName('');
+    setCourseCode('');
+  } catch (error) {
+    console.error('Error adding course:', error);
+    alert('Failed to add course.');
     }
   };
+ 
+
+
+
 
   const filteredCourses = courses.filter(course => 
     (filter.size === 0 || Array.from(filter).some(dept => course.code.startsWith(dept))) &&
