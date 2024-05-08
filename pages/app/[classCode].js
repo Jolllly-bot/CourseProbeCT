@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { auth } from "../../firebase"; 
+import { auth } from "../../firebase";
 import { addComment, getComments, deleteComment, updateComment } from "../../services/firestore/comments";
 import { getCourseById } from "../../services/firestore/courses";
 
@@ -44,8 +44,7 @@ export default function ClassCommentsPage() {
 
     const handleEditClick = (commentId) => {
         setEditingCommentId(commentId === editingCommentId ? null : commentId);
-      };
-      
+    };
 
     const createComment = async (event) => {
         event.preventDefault();
@@ -85,81 +84,69 @@ export default function ClassCommentsPage() {
     };
 
     return (
-        <div>
-            <div className="title">{courseDetails.code} {courseDetails.name}</div>
+        <div style={{ fontSize: '18px' }}>
+            <div className="title" style={{ textAlign: 'C'}}>{courseDetails.code} {courseDetails.name}</div>
 
             <section className="section">
                 <div className="title is-5">Comments</div>
-                <div className="container">
-                {comments.map(comment => (
-                    <div key={comment.id} className="box">
-                        <article className="media">
-                        <div className="media-content">
-                            <div className="content">
-                            <div className="level">
-                                <div className="level-left">
-                                {editingCommentId === comment.id ? (
-                                    <div>
-                                    <input
-                                        class="input"
-                                        type="text"
-                                        value={comment.question}
-                                        onChange={(e) => {
-                                        const updatedComments = comments.map((c) =>
-                                            c.id === comment.id ? { ...c, question: e.target.value } : c
-                                        );
-                                        setComments(updatedComments);
-                                        }}
-                                    />
-                                    <button
-                                        className="button is-primary"
-                                        onClick={() => {
-                                        updateComment(classId, comment.id, { question: comment.question });
-                                        setEditingCommentId(null);
-                                        }}
-                                    >
-                                        Update
-                                    </button>
+                <div className="container custom-scrollbar">
+                    {comments.map(comment => (
+                        <div key={comment.id} className="box">
+                            <article className="media">
+                                <div className="media-content">
+                                    <div className="content">
+                                        <div>
+                                            <div className="level-left">
+                                                {editingCommentId === comment.id ? (
+                                                    <div>
+                                                        <input className="input" type="text" value={comment.question}
+                                                            onChange={(e) => {
+                                                                const updatedComments = comments.map((c) =>
+                                                                    c.id === comment.id ? { ...c, question: e.target.value } : c
+                                                                );
+                                                                setComments(updatedComments);
+                                                            }}
+                                                        />
+                                                        <button className="button is-primary"
+                                                            onClick={() => {
+                                                                updateComment(classId, comment.id, { question: comment.question });
+                                                                setEditingCommentId(null);
+                                                            }}
+                                                        >
+                                                            Update
+                                                        </button>
+                                                    </div>
+                                                ) : (
+                                                    <p className="comment-text">
+                                                        <strong>Someone from {comment.year}</strong>{" "}
+                                                        <small>{comment.createdAt.toDate().toDateString()}</small>
+                                                        <br />
+                                                        {comment.question}
+                                                        <br />
+                                                        <br />
+                                                        Rating: {comment.rating}, Difficulty: {comment.difficulty}
+                                                    </p>
+                                                )}
+                                            </div>
+                                            <div className="level-right">
+                                                {currentUser && comment.userId === currentUser.uid ? (
+                                                    <button className="button is-info" onClick={() => handleEditClick(comment.id)}>
+                                                        {editingCommentId === comment.id ? "Cancel" : "Edit"}
+                                                    </button>
+                                                ) : null}
+                                            </div>
+                                        </div>
                                     </div>
-                                ) : (
-                                    <p>
-                                    <strong>Someone from {comment.year}</strong>{" "}
-                                    <small>{comment.createdAt.toDate().toDateString()}</small>
-                                    <br />
-                                    {comment.question}
-                                    <br />
-                                    <br />
-                                    Rating: {comment.rating}, Difficulty: {comment.difficulty}
-                                    </p>
-                                )}
                                 </div>
-                                <div className="level-right">
-                                {currentUser && comment.userId === currentUser.uid ? (
-                                    <button
-                                        className="button is-info"
-                                        onClick={() => handleEditClick(comment.id)}
-                                    >
-                                        {editingCommentId === comment.id ? "Cancel" : "Edit"}
-                                    </button>
-                                    
-                                    // <button
-                                    // className="button is-danger"
-                                    // onClick={() => onQuestionDelete(comment.id)}
-                                    // >
-                                    // Delete
-                                    // </button>
-                                ) : null}
-                                </div>
-                            </div>
-                            </div>
+                            </article>
                         </div>
-                        </article>
-                    </div>
                     ))}
-
                 </div>
             </section>
 
+
+            <hr style={{ marginTop: '20px', height: '10px' }} /> {/* Added horizontal line */}
+            
             <section className="section">
                 <div className="title is-5">Add a Comment</div>
                 {currentUser ? (
@@ -187,7 +174,7 @@ export default function ClassCommentsPage() {
                                     required
                                 ></input>
                             </p>
-                            <div>Rate the difficulty& workload (0-10):</div>
+                            <div>Rate the difficulty & workload (0-10):</div>
                             <p className="control">
                                 <input
                                     className="input"

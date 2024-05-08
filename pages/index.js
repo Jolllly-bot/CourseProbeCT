@@ -137,31 +137,29 @@ export default function Home() {
             </div>
           </div>
         </section>
-        <section className="section">
-        <p><strong>Not finding the course? Add here:</strong></p>
-        <div className="columns is-centered" style={{ marginTop: '20px' }}>
-          <div className="column is-3">
-            <input type="text" className="input" style={{ height: '2.5em' }} value={courseCode} onChange={handleCourseCodeChange} placeholder="Course Code" />
+        <section className="section background-section">
+          <p><strong>Not finding the course? Add here:</strong></p>
+          <div className="columns is-centered" style={{ marginTop: '20px' }}>
+            <div className="column is-3">
+              <input type="text" className="input" style={{ height: '2.5em' }} value={courseCode} onChange={handleCourseCodeChange} placeholder="Course Code" />
+            </div>
+            <div className="column is-3">
+              <input type="text" className="input" style={{ height: '2.5em' }} value={courseName} onChange={handleCourseNameChange} placeholder="Course Name" />
+            </div>
+            <div className="column is-2">
+              <button className="button is-success" style={{ height: '2.5em' }} onClick={handleSubmit}>Add Course</button>
+            </div>
           </div>
-          <div className="column is-3">
-            <input type="text" className="input" style={{ height: '2.5em' }} value={courseName} onChange={handleCourseNameChange} placeholder="Course Name" />
+          <div className="buttons has-addons is-centered" style={{ marginBottom: '20px' }}>
+            {['CS', 'ECE', 'INFO', 'LAW', 'NBAY', 'ORIE', 'TECH'].map(dept => (
+              <button key={dept} onClick={() => handleFilterToggle(dept)} className={`button ${filter.has(dept) ? 'is-success' : ''}`} style={{ fontSize: '1.1rem', fontWeight: 'bold', margin: '5px' }}>
+                {dept}
+              </button>
+            ))}
           </div>
-          <div className="column is-2">
-            <button className="button is-success" style={{ height: '2.5em' }} onClick={handleSubmit}>Add Course</button>
+          <div style={{ textAlign: 'center', marginTop: '10px' }}>
+            <input type="text" className="input" value={searchText} onChange={(e) => setSearchText(e.target.value)} placeholder="Search Course Name" style={{ height: '2.5em', width: '500px' }} />
           </div>
-        </div>
-        </section>
-        <section className="section">
-        <div className="buttons has-addons is-centered" style={{ marginBottom: '20px' }}>
-          {['CS', 'ECE', 'INFO', 'LAW', 'NBAY', 'ORIE', 'TECH'].map(dept => (
-            <button key={dept} onClick={() => handleFilterToggle(dept)} className={`button ${filter.has(dept) ? 'is-success' : ''}`} style={{ fontSize: '1.1rem', fontWeight: 'bold', margin: '5px' }}>
-              {dept}
-            </button>
-          ))}
-        </div>
-        <div style={{ textAlign: 'center', marginTop: '10px' }}>
-          <input type="text" className="input" value={searchText} onChange={(e) => setSearchText(e.target.value)} placeholder="Search Course Name" style={{ height: '2.5em', width: '500px' }} />
-        </div>
         </section>
         <section className="section custom-scrollbar" style={{ overflowY: 'auto', height: '600px' }}>
           <ul>
@@ -189,10 +187,12 @@ export default function Home() {
                       </a>
                       <span style={{ fontSize: '1.8em', paddingLeft: '1.2em', flex: '1 0 80%' }}>{course.name}</span>
                     </div>
-                    <div className="level-is-right">
+                    {isLoggedIn && (
+                      <div className="level-is-right">
                         <button className="button is-info" onClick={() => handleEdit(course)}>Edit</button>
                         <button className="button is-danger" onClick={() => handleDelete(course.id)}>Delete</button>
-                    </div>
+                      </div>
+                    )}
 
 
                   </>

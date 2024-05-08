@@ -2,8 +2,8 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/": "pages/index.js",
+  "/app/[classCode]": "pages/app/[classCode].js",
   "/api/auth/[...nextauth]": "pages/api/auth/[...nextauth].js",
   "/app/home": "pages/app/home.js",
-  "/api/class-codes": "pages/api/class-codes.js"
+  "/": "pages/index.js"
 }
