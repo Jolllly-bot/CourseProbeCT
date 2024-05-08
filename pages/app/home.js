@@ -79,9 +79,7 @@ export default function InstructorHomePage() {
                 {comments.map(comment => (
                   <tr key={comment.id}>
                     <td>
-                      <Link href={`/app/${comment.courseId}`}>
-                        <a>{courses[comment.courseId]}</a>
-                      </Link>
+                      {courses[comment.courseId]}
                     </td>
                     <td>{comment.rating}</td>
                     <td>{comment.year}</td>
@@ -89,15 +87,16 @@ export default function InstructorHomePage() {
                     <td>
                       {user && comment.userId === user.uid && (
                         <>
+                          <Link href={`/app/${comment.courseId}`}>
+                            <button className="button is-info is-small" style={{ marginLeft: '10px' }}>
+                              View
+                            </button>
+                          </Link>
+
                           <button className="button is-danger is-small"
                             onClick={() => handleDeleteComment(comment.courseId, comment.id)}>
                             Delete
                           </button>
-                          <Link href={`/app/view/${comment.id}`}>
-                            <a className="button is-info is-small" style={{ marginLeft: '10px' }}>
-                              View
-                            </a>
-                          </Link>
                         </>
                       )}
                     </td>
