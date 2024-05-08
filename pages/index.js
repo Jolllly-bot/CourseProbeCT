@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { getCourses, addCourse, updateCourse, deleteCourse } from '../services/firestore/courses';
+import { getComments } from '../services/firestore/comments';
 import { auth } from "../firebase"; 
 
 export default function Home() {
@@ -17,7 +18,13 @@ export default function Home() {
     const fetchCourses = async () => {
         try {
             const coursesData = await getCourses();
-            setCourses(coursesData);
+            const coursesWithCommentCount = await Promise.all(
+              coursesData.map(async (course) => {
+                const comments = await getComments(course.id);
+                return { ...course, commentCount: comments.length };
+              })
+            );
+            setCourses(coursesWithCommentCount);
         } catch (error) {
             console.error("Failed to fetch courses:", error);
         }
@@ -182,19 +189,20 @@ export default function Home() {
                 ) : (
                   <>
                     <div style={{ display: 'flex', alignItems: 'center', flex: '1' }}>
-                      <a href={`/app/${course.id}`} style={{ textDecoration: 'none', color: 'inherit', flex: '1 0 20%' }} className="has-text-primary">
+                      <a href={`/app/${course.id}`} style={{ /* ... */ }} className="has-text-primary">
                         <strong style={{ fontSize: '1.8em' }}>{course.code}</strong>
                       </a>
                       <span style={{ fontSize: '1.8em', paddingLeft: '1.2em', flex: '1 0 80%' }}>{course.name}</span>
                     </div>
-                    {isLoggedIn && (
-                      <div className="level-is-right">
-                        <button className="button is-info" onClick={() => handleEdit(course)}>Edit</button>
-                        <button className="button is-danger" onClick={() => handleDelete(course.id)}>Delete</button>
-                      </div>
-                    )}
-
-
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <span style={{ marginRight: '10px' }}>{course.commentCount} comments</span>
+                      {isLoggedIn && (
+                        <div className="level-is-right">
+                          <button className="button is-info" onClick={() => handleEdit(course)}>Edit</button>
+                          <button className="button is-danger" onClick={() => handleDelete(course.id)}>Delete</button>
+                        </div>
+                      )}
+                    </div>
                   </>
                 )}
               </li>
