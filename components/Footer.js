@@ -9,15 +9,15 @@ const Footer = () => {
             <a href="https://tech.cornell.edu">
               Cornell Tech
             </a>
+            <br />
+            Suggestions and Bug Report:{" "}
+            <a href="https://github.com/Jolllly-bot/CourseProbeCT">
+              GitHub
+            </a>            
             {" "}|{" "}
             <a href="https://github.com/Jolllly-bot/CourseProbeCT#commuity-guidelines">
               Community Guildelines
             </a>
-            <br />
-            Suggestions and bug report:{" "}
-            <a href="https://github.com/Jolllly-bot/CourseProbeCT">
-              GitHub
-            </a>            
           </p>
 
       </div>

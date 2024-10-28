@@ -2,9 +2,8 @@ import { useState, useEffect } from "react";
 import { getCourses, addCourse, updateCourse, deleteCourse } from '../services/firestore/courses';
 import { getComments } from '../services/firestore/comments';
 import { auth } from "../firebase"; 
-import { ClassList } from "../components/ClassList";
 
-export default function Home() {
+export function ClassList() {
   const [courses, setCourses] = useState([]);
   const [filter, setFilter] = useState(new Set());
   const [courseName, setCourseName] = useState('');
@@ -132,33 +131,78 @@ export default function Home() {
 
   return (
     <div>
-      <main>
-        <section className="hero is-link" style={{ position: 'relative', overflow: 'hidden', width: '100vw', height: '56.25vw', maxHeight: '100vh' }}>
-          <iframe 
-            src="https://www.youtube.com/embed/n8Y34Axq2EM?enablejsapi=1&autoplay=1&loop=1&controls=0&rel=0&wmode=transparent&showinfo=0&mute=1&autohide=0&modestbranding=1&playsinline=1&hd=1&vq=hd1080&disablekb=1&origin=https%3A%2F%2Ftech.cornell.edu&widgetid=1&playlist=n8Y34Axq2EM" 
-            style={{ position: 'absolute', top: '0', left: '0', width: '100vw', height: '56.25vw', border: 'none', objectFit: 'cover' }}
-            frameBorder="0"
-            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          ></iframe>
-          <div className="hero-body columns is-vcentered" style={{ position: 'relative', zIndex: '10' }}>
-            <div className="column">
-              <p className="title" style={{ fontSize: '2em' }}>Explore Cornell Tech Courses</p>
-              <p className="subtitle" style={{ fontSize: '1.5em' }}>
-                Discover what students say about their courses at Cornell Tech
-              </p>
-              <a href="https://classes.cornell.edu/search/roster/SP25?q=&days-type=any&campus%5B0%5D=NYT&crseAttrs-type=any&breadthDistr-type=any&pi="
-               className="button is-danger is-outlined" 
-               style={{ height: '2.5em' }}>
-                SP25 Class Roster
-              </a>
-            </div>
+        <section className="section background-section">
+          <div className="buttons has-addons is-centered" style={{ marginBottom: '20px' }}>
+            {['CS', 'ECE', 'INFO', 'LAW', 'NBAY', 'ORIE', 'TECH'].map(dept => (
+              <button key={dept} onClick={() => handleFilterToggle(dept)} className={`button ${filter.has(dept) ? 'is-danger' : ''}`} style={{ fontSize: '1.1rem', fontWeight: 'bold', margin: '5px' }}>
+                {dept}
+              </button>
+            ))}
+          </div>
+          <div style={{ textAlign: 'center', marginTop: '10px' }}>
+            <input type="text" className="input" value={searchText} onChange={(e) => setSearchText(e.target.value)} placeholder="Search Course Name" style={{ height: '2.5em', width: '500px' }} />
           </div>
         </section>
-
-        <ClassList />
-        
-      </main>
+        <section className="section custom-scrollbar" style={{ overflowY: 'auto', height: '800px' }}>
+          <ul>
+            {filteredCourses.map(course => (
+              <li key={course.id} style={{ 
+                padding: '10px', 
+                backgroundColor: '#f0f0f0', 
+                margin: '10px', 
+                borderRadius: '10px',
+                display: 'flex',  
+                alignItems: 'center', 
+                justifyContent: 'space-between' // Ensures space distribution
+              }}>
+                {editingId === course.id ? (
+                  <>
+                    <input className="input" value={editCode} onChange={(e) => handleCourseCodeChange(e)} style={{ marginRight: '10px', flex: '1 0 20%' }} />
+                    <input className="input" value={editName} onChange={(e) => handleCourseNameChange(e)} style={{ marginRight: '10px', flex: '1 0 60%' }} />
+                    <button className="button is-success" onClick={handleSave}>Save</button>
+                  </>
+                ) : (
+                  <>
+                    <div style={{ display: 'flex', alignItems: 'center', flex: '1' }}>
+                      
+                      <strong style={{ fontSize: '1.5em' }}>
+                        {course.code}
+                      </strong>
+                      <a 
+                        href={`https://classes.cornell.edu/browse/roster/SP25/class/${course.code.split(' ')[0]}/${course.code.split(' ')[1]}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="has-text-danger"
+                        >
+                        <span style={{ fontSize: '1.5em', paddingLeft: '1.2em', flex: '1 0 80%' }}>{course.name}</span>
+                      </a>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <a href={`/app/${course.id}`} style={{ /* ... */ }} className="has-text-info">
+                        <strong style={{ marginRight: '10px' }}>See {course.commentCount} comments</strong>
+                      </a>
+                      
+                    </div>
+                  </>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+        {/* <section className="section">
+        <p><strong>Not finding the course? Add here:</strong></p>
+          <div className="columns is-centered" style={{ marginTop: '20px' }}>
+            <div className="column is-3">
+              <input type="text" className="input" style={{ height: '2.5em' }} value={courseCode} onChange={handleCourseCodeChange} placeholder="Course Code" />
+            </div>
+            <div className="column is-3">
+              <input type="text" className="input" style={{ height: '2.5em' }} value={courseName} onChange={handleCourseNameChange} placeholder="Course Name" />
+            </div>
+            <div className="column is-2">
+              <button className="button is-success" style={{ height: '2.5em' }} onClick={addCourse}>Add Course</button>
+            </div>
+          </div>
+        </section> */}
     </div>
   );
 }

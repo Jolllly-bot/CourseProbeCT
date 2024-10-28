@@ -49,47 +49,28 @@ const NavBar = () => {
     >
       <div className="navbar-brand">
         <Link href="/">
-          <a className="navbar-item"><strong>CourseProbe</strong></a>
+          <a className="navbar-item"><strong>CourseProbeCT</strong></a>
         </Link>
       </div>
       <div className="navbar-menu">
         <div className="navbar-start"></div>
       </div>
       <div className="navbar-end">
-          {/* CS5356 TODO 1a. Navigation
-
-Create a new page at /app/home to be the Instructor Home Page.
-This page should only be visible by signed in users.
-If a signed-out user tries to access the page, they should
-be redirected to the login page to complete signing in.
-
-The Instructor Home Page should have 2 parts, similar to your 
-wireframe.
-1. The page should contain one section to display a short form
-allowing them to create a class code by making a 
-POST /api/class-codes (Completed in step 3a). When a class code has been created, this 
-page should re-fetch the user's class codes.
-
-2. The page should contain another section to display a list or
-table of the user's class codes. When the page loads for the first
-time, make a GET /api/class-codes (Completed in step 3a) to fetch the list of class codes.
-*/}
-        
         <div className="navbar-item">
           <div className="buttons">
             {currentUser ? (
               <div style={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-between' }}>
                 {/* <p className="navbar-item">{currentUser.displayName}</p> */}
-                <Link href="/app/home">
+                <Link href="/app/myContributions">
                   <a className="navbar-item">My contributions</a>
                 </Link>
-                <button className="button is-primary" onClick={() => signOutGoogle()}>
+                <button className="button is-danger is-outlined" onClick={() => signOutGoogle()}>
                   Sign Out
                 </button>
               </div>
             ) : (
               <div>
-                <button className="button is-primary" onClick={() => signInWithGoogle()}>
+                <button className="button is-danger is-outlined" onClick={() => signInWithGoogle()}>
                   Sign In
                 </button>
               </div>

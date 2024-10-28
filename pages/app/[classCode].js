@@ -87,11 +87,20 @@ export default function ClassCommentsPage() {
         <div style={{ fontSize: '18px' }}>
             <div className="title ml-4 mt-4">
                 {courseDetails.code} {courseDetails.name}
+                <br></br>
+                <a 
+                    href={`https://classes.cornell.edu/browse/roster/SP25/class/${courseDetails.code.split(' ')[0]}/${courseDetails.code.split(' ')[1]}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="is-size-6 ml-2"
+                >
+                    View Course Information
+                </a>
             </div>
 
-            <section className="section">
+            <section className="section custom-scrollbar" style={{ overflowY: 'auto', height: '800px' }}>
                 <div className="title is-4 mb-10">Comments</div>
-                <div className="container custom-scrollbar">
+                <div className="container">
                     {comments.map(comment => (
                         <div key={comment.id} className="box">
                             <article className="media">
@@ -117,14 +126,15 @@ export default function ClassCommentsPage() {
                                                 
                                             </div>
                                             ) : (
-                                            <p className="comment-text">
+                                            <div class="content">
                                                 <strong>Someone from {comment.year}</strong>{" "}
                                                 <small>
                                                 {comment.createdAt.toDate().toDateString()}
                                                 </small>
-                                                <br />
-                                                {comment.question}
-                                                <br />
+                                                <br /><br />
+                                                <p>
+                                                    {comment.question}
+                                                </p>
                                                 <div class="tags are-Medium">
                                                     <span class="tag is-primary is-light mt-3 mr-4">
                                                         Rating: {comment.rating}
@@ -133,7 +143,7 @@ export default function ClassCommentsPage() {
                                                         Difficulty: {comment.difficulty}
                                                     </span>
                                                 </div>                                            
-                                            </p>
+                                            </div>
                                             )}
                                             </div>
                                             <div className="level-right">
